@@ -1,0 +1,61 @@
+using System.Net;
+using System.Text;
+using System.Drawing;
+using System.Diagnostics;
+
+HttpListener server = new HttpListener();
+server.Prefixes.Add("http://127.0.0.1:8888/connection/");
+server.Prefixes.Add("http://192.168.43.122:8888/test/");
+
+server.Start();
+
+while (true)
+{
+
+	var context = server.GetContext(); // Получает контекст подключения, из которого может взять информацию о запросе (Request) и создать ответ (Responce).
+
+	Console.WriteLine("Принят запрос. ");
+
+	var request = context.Request;
+	var response = context.Response;
+
+	byte[] barray = new byte[request.ContentLength64];
+	Stream input = request.InputStream;
+	int x = input.Read(barray);
+
+	Console.WriteLine(x.ToString());
+	Console.WriteLine(barray.Length.ToString());
+
+	MemoryStream ms = new MemoryStream(barray);
+	Image imgo = Image.FromStream(ms);
+	imgo.Save("./Original/ImageFromOrange.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+	imgo.Save("./Recognizer/dist/raspoznavalka/file.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+	imgo.Dispose();
+
+	ProcessStartInfo psi = new ProcessStartInfo();
+	psi.FileName = "./Recognizer/dist/raspoznavalka/raspoznavalka.exe";
+	psi.WorkingDirectory = "./Recognizer/dist/raspoznavalka";
+
+	Process recognizer = Process.Start(psi);
+	Thread.Sleep(10000);
+	recognizer.Close();
+	
+
+	ms = new MemoryStream();
+	Image imgr = Image.FromFile("./Recognizer/dist/raspoznavalka/cam.jpeg");
+	imgr.Save("./Recognized/recog.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+	imgr.Save(ms, imgr.RawFormat);
+	imgr.Dispose();
+	
+	byte[] answerimg = ms.GetBuffer();
+	response.ContentLength64 = answerimg.Length;
+
+	Stream output = response.OutputStream;
+	output.Write(answerimg);
+	output.Flush();
+
+	Console.WriteLine("Отправлен ответ на запрос. ");
+}
+
+server.Stop();
+server.Close();
