@@ -16,11 +16,14 @@ import java.util.stream.Stream;
 
 
 public class ConnectionHttp {
-
-    public static void start() throws Exception {
+    static Bitmap image;
+    public static Bitmap getImage(){
+        return image;
+    }
+    public static int start() throws Exception {
         System.out.println("null");
-        String port = "http://192.168.1.104:8888/test/";
-        onSend(port, "drawable/file.png");
+        String port = "http://26.47.148.52:8888/test/";
+        return onSend(port, "drawable/file.png");
     }
 
     public static Bitmap byteToBitmap(byte[] bytes) throws IOException {
@@ -31,7 +34,7 @@ public class ConnectionHttp {
         return bitmap;
     }
 
-    public static void onSend(String path , String file) throws Exception {
+    public static int onSend(String path , String file) throws Exception {
         String text = "ClientRequest";
 
         // Установка URL-адреса для отправки изображения
@@ -96,7 +99,7 @@ public class ConnectionHttp {
 
             // Сохранение полученной картинки в файл
             bniger.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
+            image = bniger;
             // Закрываем входной поток и соединение
             outputStream.close();
             is.close();
@@ -106,6 +109,7 @@ public class ConnectionHttp {
         else{
             System.out.println("No file to download. Server replied HTTP code: " + responseCode);
         }
+        return responseCode;
     }
 
 }
