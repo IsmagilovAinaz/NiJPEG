@@ -3,7 +3,9 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,8 +43,24 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         else if(id == R.id.itemRecon){
-            
+            RequestSender requestSender = new RequestSender();
+            requestSender.execute();
         }
         return false;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    class RequestSender extends AsyncTask<Void, Integer, Void> {
+
+        @SuppressLint("AllowAllHostnameVerifier")
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                ConnectionHttp.start();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }
     }
 }
