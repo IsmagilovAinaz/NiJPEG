@@ -22,8 +22,8 @@ public class ConnectionHttp {
     }
     public static int start() throws Exception {
         System.out.println("null");
-        String port = "http://192.168.43.122:8888/test/";
-        return onSend(port, "drawable/file.png");
+        String port = "http://192.168.69.117:8888/test/";
+        return onSend(port);
     }
 
     public static Bitmap byteToBitmap(byte[] bytes) throws IOException {
@@ -34,7 +34,7 @@ public class ConnectionHttp {
         return bitmap;
     }
 
-    public static int onSend(String path , String file) throws Exception {
+    public static int onSend(String path) throws Exception {
         String text = "ClientRequest";
 
         // Установка URL-адреса для отправки изображения
