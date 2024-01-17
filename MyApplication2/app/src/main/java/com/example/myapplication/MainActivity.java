@@ -5,14 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    int CODE_HTTP = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
         else if(id == R.id.itemRecon){
             RequestSender requestSender = new RequestSender();
             requestSender.execute();
+            if(CODE_HTTP==200){
+                //Online
+                ImageView imageView = findViewById(R.id.imageView);
+                imageView.setImageBitmap(ConnectionHttp.getImage());
+                TextView textView = findViewById(R.id.statusId);
+                textView.setText("Online");
+                textView.setTextColor(Color.parseColor("#39FF14"));
+            }
+            else{
+                //Offline
+                TextView textView = findViewById(R.id.statusId);
+                textView.setText("Offline");
+                textView.setTextColor(Color.parseColor("#FF0000"));
+            }
         }
         return false;
     }
@@ -56,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                ConnectionHttp.start();
+                CODE_HTTP = ConnectionHttp.start();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
