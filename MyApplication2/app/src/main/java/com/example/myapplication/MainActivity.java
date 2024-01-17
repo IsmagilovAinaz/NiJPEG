@@ -18,10 +18,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+public class MainActivity extends AppCompatActivity {
+    final String SERVER_ADDRESS_PATH = "ServerAddress.txt";
+    final String LOG_FILE_NAME = "AppLog%g.log";
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     Logger logger;
     int CODE_HTTP = 0;
     int REQUEST_OK = 200;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +109,37 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private String getStringFromFile(String path) {
+        try {
+            FileInputStream fin = openFileInput(path);
+            byte[] bytes = new byte[fin.available()];
+            fin.read(bytes);
+            fin.close();
+            return new String(bytes);
+        } catch (FileNotFoundException ex) {
+            setStringToFile("none", path);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, String.format("read file %s : input/output", path));
+        }
+        catch (Exception ex) {
+            logger.log(Level.SEVERE, String.format("read file %s : unexpected", path));
+        }
+        return "none";
+    }
+
+    private void setStringToFile(String data, String path) {
+        try {
+            FileOutputStream fos = openFileOutput(path, MODE_PRIVATE);
+            fos.write(data.getBytes());
+            fos.close();
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, String.format("write file %s : input/output", path));
+        }
+        catch (Exception ex) {
+            logger.log(Level.SEVERE, String.format("write file %s : unexpected", path));
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     class RequestSender extends AsyncTask<Void, Integer, Void> {
 
@@ -106,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                CODE_HTTP = ConnectionHttp.start();
+                CODE_HTTP = ConnectionHttp.start(getStringFromFile(SERVER_ADDRESS_PATH));
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "timeout: unexpected");
             }

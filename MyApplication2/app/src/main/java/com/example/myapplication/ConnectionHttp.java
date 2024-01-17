@@ -20,10 +20,9 @@ public class ConnectionHttp {
     public static Bitmap getImage(){
         return image;
     }
-    public static int start() throws Exception {
+    public static int start(String ip) throws Exception {
         System.out.println("null");
-        String port = "http://192.168.69.117:8888/test/";
-        return onSend(port);
+        return onSend(ip);
     }
 
     public static Bitmap byteToBitmap(byte[] bytes) throws IOException {
