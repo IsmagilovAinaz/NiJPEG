@@ -22,7 +22,7 @@ public class ConnectionHttp {
     }
     public static int start() throws Exception {
         System.out.println("null");
-        String port = "http://26.47.148.52:8888/test/";
+        String port = "http://192.168.43.122:8888/test/";
         return onSend(port, "drawable/file.png");
     }
 
