@@ -15,7 +15,7 @@ class Program
 		IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
 		for (int a = 0; a < addresses.Length; ++a)
 		{
-			if (addresses[a].ToString().Length < 15)
+			if (addresses[a].ToString().Length <= 15)
 			{
 				server.Prefixes.Add("http://" + addresses[a].ToString() + ":8888/test/");
 			}
