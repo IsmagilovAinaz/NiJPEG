@@ -20,10 +20,9 @@ public class ConnectionHttp {
     public static Bitmap getImage(){
         return image;
     }
-    public static int start() throws Exception {
+    public static int start(String ip) throws Exception {
         System.out.println("null");
-        String port = "http://192.168.43.122:8888/test/";
-        return onSend(port, "drawable/file.png");
+        return onSend(ip);
     }
 
     public static Bitmap byteToBitmap(byte[] bytes) throws IOException {
@@ -34,7 +33,7 @@ public class ConnectionHttp {
         return bitmap;
     }
 
-    public static int onSend(String path , String file) throws Exception {
+    public static int onSend(String path) throws Exception {
         String text = "ClientRequest";
 
         // Установка URL-адреса для отправки изображения
