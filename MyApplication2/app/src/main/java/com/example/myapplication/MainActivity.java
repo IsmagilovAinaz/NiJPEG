@@ -30,10 +30,6 @@ import java.util.logging.SimpleFormatter;
 public class MainActivity extends AppCompatActivity {
     final String SERVER_ADDRESS_PATH = "ServerAddress.txt";
     final String LOG_FILE_NAME = "AppLog%g.log";
-
-public class MainActivity extends AppCompatActivity {
-
-    final String LOG_FILE_NAME =  "AppLog%g.log";
     final int LOG_FILE_C = 5;
     final int LOG_SIZE = 102400;
     final boolean LOG_APPEND = true;
