@@ -12,8 +12,14 @@ class Program
 	{
 		HttpListener server = new HttpListener();
 
-		server.Prefixes.Add("http://127.0.0.1:8888/connection/");
-		server.Prefixes.Add("http://192.168.1.104:8888/test/");
+		IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
+		for (int a = 0; a < addresses.Length; ++a)
+		{
+			if (addresses[a].ToString().Length < 15)
+			{
+				server.Prefixes.Add("http://" + addresses[a].ToString() + ":8888/test/");
+			}
+		}
 
 		server.Start();
 
